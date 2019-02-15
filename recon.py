@@ -2,13 +2,21 @@ import cv2
 import numpy as np
 
 def main():
-    confidence_ratio = 0.90
+    confidence_ratio = 0.05
     image = cv2.imread('input.jpg')
+    #gray = cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
+    #ret, thresh = cv2.threshold(gray,0,255,cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)
+    #kernel = np.ones((3,3),np.uint8)
+    #opening = cv2.morphologyEx(thresh,cv2.MORPH_OPEN,kernel, iterations = 2)
+    #sure_bg = cv2.dilate(opening,kernel,iterations=3)
+    #cv2.imwrite("oof.jpg", sure_bg)
     temp_image = np.zeros(image.shape, np.uint8)
     temp_image.fill(255)
     detector = cv2.text_TextDetectorCNN.create("model.prototxt", "icdar13.caffemodel")
     Bbox, confidence = detector.detect(image)
     filtered = list()
+    print("String to filter : ", len(Bbox), " strings")
+    print(confidence)
     for i in range(len(Bbox)):
         if confidence[i] > confidence_ratio:
             temp_image[Bbox[i][1]:(Bbox[i][1]+Bbox[i][3]), Bbox[i][0]:(Bbox[i][0]+Bbox[i][2])] = image[Bbox[i][1]:(Bbox[i][1]+Bbox[i][3]), Bbox[i][0]:(Bbox[i][0]+Bbox[i][2])]
@@ -39,6 +47,8 @@ def main():
         cv2.rectangle(image, (box[0], box[1]), (box[0]+box[2],box[1]+box[3]), (0, 255, 0), 1)
         cropped = cv2.cvtColor(image[box[1]:(box[1]+box[3]), box[0]:(box[0]+box[2])], cv2.COLOR_BGR2GRAY)
         cropped = cv2.inRange(cropped, 100, 245)
+        #cv2.imshow("cropped", cropped)
+        #cv2.waitKey(0)
         height, width = cropped.shape
         temp_image = np.zeros((height+20, width+20), np.uint8)
         temp_image[10:(height+10), 10:(width+10)] = cropped
