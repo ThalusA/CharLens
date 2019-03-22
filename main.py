@@ -3,6 +3,8 @@ import numpy as np
 from scipy import io as spio
 import os 
 import matplotlib.pyplot as plt
+from sklearn.preprocessing import StandardScaler
+import h5py
 
 emnist = spio.loadmat("emnist-balanced.mat")
 
@@ -23,16 +25,18 @@ y_test = emnist["dataset"][0][0][1][0][0][1]
 train_labels = y_train
 test_labels = y_test
 
-x_train /= 255
-x_test /= 255
+x_train = x_train.reshape(-1, 784)
+x_test = x_test.reshape(-1, 784)
 
-x_train = x_train.reshape(x_train.shape[0], 1 ,28, 28, order="A")
-x_test = x_test.reshape(x_test.shape[0], 1 ,28, 28, order="A")
+x_train = x_train.astype(float)
+x_test = x_test.astype(float)
 
-y_train = tf.keras.utils.to_categorical(y_train, 47)
-y_test = tf.keras.utils.to_categorical(y_test, 47)
+scaler = StandardScaler()
+x_train = scaler.fit_transform(x_train)
+x_test = scaler.fit_transform(x_test)
 
-
+x_train = x_train.reshape(x_train.shape[0] ,28, 28, order="A")
+x_test = x_test.reshape(x_test.shape[0] ,28, 28, order="A")
 
 model = tf.keras.models.Sequential()
 model.add(tf.keras.layers.Flatten(input_shape=[28, 28]))
@@ -49,8 +53,17 @@ model.compile(
 )
 
 history = model.fit(x_train, y_train, epochs=10)
+
+tf.keras.models.save_model(
+    model,
+    'model_weights',
+    overwrite=True,
+    include_optimizer=True
+)
+
+
 loss_curve = history.history["loss"]
-acc_curve = history.history["acc"]
+acc_curve = history.history["accuracy"]
 
 plt.plot(loss_curve)
 plt.title("Loss")
