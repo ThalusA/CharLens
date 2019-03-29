@@ -68,7 +68,7 @@ if __name__ == "__main__":
     model_available = list()
     for i, files in enumerate(os.listdir("./models")):
         model_available.append(files)
-        print(i, " : ", files[:-3])
+        print(i, " : ", files[:-4])
     if len(model_available):
         choose = input("Models available, which one you want to load (left blank for creating a new one) ? : ")
     if len(choose):
