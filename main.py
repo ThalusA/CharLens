@@ -64,7 +64,7 @@ if __name__ == "__main__":
     if len(model_available):
         choose = input("Models available, which one you want to load ? : ")
     if len(choose):
-        model = tf.keras.models.load_model("./models/"+str(model_available[int(choose)]), compile=False)
+        model = tf.keras.models.load_model("./models/"+str(model_available[int(choose)])+".clw", compile=False)
     else:
         print("Please don't left it blank.")
     prediction = model.predict(np_im)
