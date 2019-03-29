@@ -1,6 +1,7 @@
 from PIL import Image
 import numpy
 import tensorflow as tf
+import os
 
 prediction_dict = [
     "0",
@@ -56,7 +57,16 @@ if __name__ == "__main__":
     im = Image.open("image.png")
     np_im = numpy.array(im.convert("L"))
     np_im = numpy.expand_dims(np_im, axis=0)
-    model = tf.keras.models.load_model("model_weights", compile=False)
+    model_available = list()
+    for i, files in enumerate(os.listdir("./models")):
+        model_available.append(files)
+        print(i, " : ", files[:-3])
+    if len(model_available):
+        choose = input("Models available, which one you want to load ? : ")
+    if len(choose):
+        model = tf.keras.models.load_model("./models/"+str(model_available[int(choose)]), compile=False)
+    else:
+        print("Please don't left it blank.")
     prediction = model.predict(np_im)
     print("The prediction says it's a : ", prediction_dict[numpy.where(prediction == numpy.amax(prediction))[1][0]])
 
