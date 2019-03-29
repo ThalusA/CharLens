@@ -86,8 +86,9 @@ if __name__ == "__main__":
         history = model.fit(x_train, y_train, epochs=int(train_step), use_multiprocessing=True)
         #Save model
         model_name = input("How do you want to call the weight file (left blank for default : 'model_weights') ? : ")
-        if model_name == "": model_name = "model_weights"
-        tf.keras.models.save_model(model, model_name+'.clw', overwrite=True, include_optimizer=True)
+        if not len(model_name): 
+            model_name = "model_weights"
+        tf.keras.models.save_model(model, "/models/"+model_name+'.clw', overwrite=True, include_optimizer=True)
     elif trainBoolean == "N":
         #Test the model
         history = model.evaluate(x_test, y_test, use_multiprocessing=True)
