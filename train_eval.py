@@ -55,8 +55,8 @@ def show_graphs(history):
 def model_layer():
     model = tf.keras.models.Sequential()
     model.add(tf.keras.layers.Flatten(input_shape=[28, 28]))
-    model.add(tf.keras.layers.Dense(128, activation="relu"))
-    model.add(tf.keras.layers.Dense(81, activation="relu"))
+    model.add(tf.keras.layers.Dense(256, activation="relu"))
+    model.add(tf.keras.layers.Dense(141, activation="relu"))
     model.add(tf.keras.layers.Dense(47, activation="softmax"))
     return model
 
@@ -65,11 +65,15 @@ if __name__ == "__main__":
     x_train, x_test, y_train, y_test = load_dataset()
     x_train, x_test, y_train, y_test = normalize_dataset(x_train, x_test, y_train, y_test)
     #Check if there is an already existing model save and ask if you want to load it or create another model
-    if os.path.exists('model_weights'):
-        usePreprocessedWeights = str(input("Weights Files available, do you want to load it ? (Y: Yes ; N: No) : ")).upper()
-    if usePreprocessedWeights == "Y":
-        model = tf.keras.models.load_model("model_weights", compile=False)
-    elif usePreprocessedWeights == "N":
+    model_available = list()
+    for i, files in enumerate(os.listdir("./models")):
+        model_available.append(files)
+        print(i, " : ", files[:-3])
+    if len(model_available):
+        choose = input("Models available, which one you want to load (left blank for creating a new one) ? : ")
+    if len(choose):
+        model = tf.keras.models.load_model("./models/"+str(model_available[int(choose)]), compile=False)
+    elif choose == "":
         model = model_layer()
     #Display basic information about the model and compile it with various function
     model.summary()
@@ -81,7 +85,9 @@ if __name__ == "__main__":
         #Train model
         history = model.fit(x_train, y_train, epochs=int(train_step), use_multiprocessing=True)
         #Save model
-        tf.keras.models.save_model(model, 'model_weights', overwrite=True, include_optimizer=True)
+        model_name = input("How do you want to call the weight file (left blank for default : 'model_weights') ? : ")
+        if model_name == "": model_name = "model_weights"
+        tf.keras.models.save_model(model, model_name+'.clw', overwrite=True, include_optimizer=True)
     elif trainBoolean == "N":
         #Test the model
         history = model.evaluate(x_test, y_test, use_multiprocessing=True)
