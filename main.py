@@ -2,7 +2,6 @@ from PIL import Image
 import numpy
 import tensorflow as tf
 import os
-from camera import capture_img
 
 prediction_dict = [
     "0",
@@ -66,7 +65,8 @@ if __name__ == "__main__":
     else:
         print("Please don't left it blank.")
         quit()
-    capture_img("./input.png")
+    if(input("Do you want to use the Rasberry's camera or load 'input.png' ( Left blank for using camera )")):
+        capture_img("./input.png")
     im = Image.open("input.png")
     np_im = numpy.array(im.convert("L"))
     np_im = numpy.expand_dims(np_im, axis=0)
