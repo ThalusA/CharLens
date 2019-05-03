@@ -2,6 +2,7 @@ from PIL import Image
 import numpy
 import tensorflow as tf
 import os
+from camera import capture_img
 
 prediction_dict = [
     "0",
@@ -54,9 +55,6 @@ prediction_dict = [
 ]
 
 if __name__ == "__main__":
-    im = Image.open("image.png")
-    np_im = numpy.array(im.convert("L"))
-    np_im = numpy.expand_dims(np_im, axis=0)
     model_available = list()
     for i, files in enumerate(os.listdir("./models")):
         model_available.append(files)
@@ -67,6 +65,11 @@ if __name__ == "__main__":
         model = tf.keras.models.load_model("./models/"+str(model_available[int(choose)])+".clw", compile=False)
     else:
         print("Please don't left it blank.")
+        quit()
+    capture_img("./input.png")
+    im = Image.open("input.png")
+    np_im = numpy.array(im.convert("L"))
+    np_im = numpy.expand_dims(np_im, axis=0)
     prediction = model.predict(np_im)
     print("The prediction says it's a : ", prediction_dict[numpy.where(prediction == numpy.amax(prediction))[1][0]])
 

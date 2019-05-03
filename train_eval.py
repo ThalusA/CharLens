@@ -55,7 +55,7 @@ def show_graphs(history):
 def model_layer():
     model = tf.keras.models.Sequential()
     model.add(tf.keras.layers.Flatten(input_shape=[28, 28]))
-    model.add(tf.keras.layers.Dense(256, activation="relu"))
+    model.add(tf.keras.layers.Conv2D(256, kernel_size=5, activation="relu"))
     model.add(tf.keras.layers.Dense(141, activation="relu"))
     model.add(tf.keras.layers.Dense(47, activation="softmax"))
     return model
@@ -77,13 +77,13 @@ if __name__ == "__main__":
         model = model_layer()
     #Display basic information about the model and compile it with various function
     model.summary()
-    model.compile(loss="sparse_categorical_crossentropy", optimizer="sgd", metrics=["accuracy"])
+    model.compile(loss="sparse_categorical_crossentropy", optimizer="adam", metrics=["accuracy"])
     #Ask if you want to train the model or want to test it
     trainBoolean = str(input("Do you want to test the model or train the model (Y: Train Model ; N: Test Model) : ")).upper()
     if trainBoolean == "Y":
         train_step = input("Veuillez renseigner le nombre d'étape d'apprentissage que vous voulez éxécuter : ")
         #Train model
-        history = model.fit(x_train, y_train, epochs=int(train_step), use_multiprocessing=True)
+        history = model.fit(x_train, y_train, epochs=int(train_step), use_multiprocessing=True) 
         #Save model
         model_name = input("How do you want to call the weight file (left blank for default : 'model_weights') ? : ")
         if not len(model_name): 
@@ -94,7 +94,6 @@ if __name__ == "__main__":
         history = model.evaluate(x_test, y_test, use_multiprocessing=True)
     #Plot accuracy & loss graph
     show_graphs(history)
-    
 
 
 
