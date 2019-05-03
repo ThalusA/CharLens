@@ -67,8 +67,8 @@ if __name__ == "__main__":
         quit()
     if(input("Do you want to use the Rasberry's camera or load 'input.png' ( Left blank for using camera )")):
         from camera import capture_img
-        capture_img("./input.png")
-    im = Image.open("input.png")
+        capture_img("./output.png")
+    im = Image.open("output.png")
     np_im = numpy.array(im.convert("L"))
     np_im = numpy.expand_dims(np_im, axis=0)
     prediction = model.predict(np_im)

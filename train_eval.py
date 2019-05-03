@@ -22,7 +22,6 @@ def load_dataset():
     y_test = emnist["dataset"][0][0][1][0][0][1]
     return (x_train, x_test, y_train, y_test)
 
-
 def normalize_dataset(x_train, x_test, y_train, y_test):
     #Set every variable to float for memory purposes
     x_train = x_train.astype(float)
@@ -55,7 +54,7 @@ def show_graphs(history):
 def model_layer():
     model = tf.keras.models.Sequential()
     model.add(tf.keras.layers.Flatten(input_shape=[28, 28]))
-    model.add(tf.keras.layers.Conv2D(256, kernel_size=5, activation="relu"))
+    model.add(tf.keras.layers.Dense(256, kernel_size=5, activation="relu"))
     model.add(tf.keras.layers.Dense(141, activation="relu"))
     model.add(tf.keras.layers.Dense(47, activation="softmax"))
     return model

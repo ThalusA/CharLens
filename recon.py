@@ -2,21 +2,13 @@ import cv2
 import numpy as np
 
 def main():
-    confidence_ratio = 0.05
+    confidence_ratio = 0.9
     image = cv2.imread('input.jpg')
-    #gray = cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
-    #ret, thresh = cv2.threshold(gray,0,255,cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)
-    #kernel = np.ones((3,3),np.uint8)
-    #opening = cv2.morphologyEx(thresh,cv2.MORPH_OPEN,kernel, iterations = 2)
-    #sure_bg = cv2.dilate(opening,kernel,iterations=3)
-    #cv2.imwrite("oof.jpg", sure_bg)
     temp_image = np.zeros(image.shape, np.uint8)
     temp_image.fill(255)
     detector = cv2.text_TextDetectorCNN.create("model.prototxt", "icdar13.caffemodel")
     Bbox, confidence = detector.detect(image)
     filtered = list()
-    print("String to filter : ", len(Bbox), " strings")
-    print(confidence)
     for i in range(len(Bbox)):
         if confidence[i] > confidence_ratio:
             temp_image[Bbox[i][1]:(Bbox[i][1]+Bbox[i][3]), Bbox[i][0]:(Bbox[i][0]+Bbox[i][2])] = image[Bbox[i][1]:(Bbox[i][1]+Bbox[i][3]), Bbox[i][0]:(Bbox[i][0]+Bbox[i][2])]
