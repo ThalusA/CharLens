@@ -66,6 +66,7 @@ if __name__ == "__main__":
         print("Please don't left it blank.")
         quit()
     if(input("Do you want to use the Rasberry's camera or load 'input.png' ( Left blank for using camera )")):
+        from camera import capture_img
         capture_img("./input.png")
     im = Image.open("input.png")
     np_im = numpy.array(im.convert("L"))
