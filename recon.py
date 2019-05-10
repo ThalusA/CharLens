@@ -3,7 +3,7 @@ import numpy as np # Importe le module "numpy"
 
 def main():
     confidence_ratio = 0.9 #Assigne une valeur de confiance au résultat du detecteur de chaines de caractères prenant donc que les prédictions qui ont plus de 90% de chance d'être juste
-    image = cv2.imread('input.jpg') #Charge l'image à analyser
+    image = cv2.imread('input.png') #Charge l'image à analyser
     temp_image = np.zeros(image.shape, np.uint8) #Créer une image temporaire où stocker toutes les chaines de caractères detecter
     temp_image.fill(255) #Remplit cette image temporaire d'un fond blanc
     detector = cv2.text_TextDetectorCNN.create("model.prototxt", "icdar13.caffemodel") #Charge l'IA reconnaisseuse d'emplacement de chaines de caractères préentrainé avec le set de ...
@@ -37,6 +37,7 @@ def main():
     # Filtre les délimitations chaînes de caractères qui se chevaucher pour les rassembler en une seul délimitation
     image = temp_image # Créer une image identique servant de visualisation
     print("Détecté : ", len(filtered), " chaines de caractères") # Affiche le nombre de chaînes de caractères detecté
+    char_list = list()
     for box in filtered: # Traite chaque chaines de caractères afin d'extraire les différents caractères les composant.
         cv2.rectangle(image, (box[0], box[1]), (box[0]+box[2],box[1]+box[3]), (0, 255, 0), 1)
         cropped = cv2.cvtColor(image[box[1]:(box[1]+box[3]), box[0]:(box[0]+box[2])], cv2.COLOR_BGR2GRAY)
@@ -52,8 +53,12 @@ def main():
         for c in contours:
             x, y, w, h = cv2.boundingRect(c)
             if h in range((height//3)*2, height):
+                cropped_char = image[box[1]+y-10:box[1]+y-10+h, box[0]+x-10:box[0]-10+x+w]
+                resized_char = None
+                height_chr, width_chr = cropped_char.shape
+                cv2.resize(cropped_char,resized_char,28/width_chr, 28/height_chr, interpolation = cv2.INTER_CUBIC)
+                char_list.append(resized_char)
                 cv2.rectangle(image, (box[0]+x-10, box[1]+y-10), (box[0]-10+x+w, box[1]-10+y+h), (255,0,0), 1)
         # Dessine les contours des différences caractères en rajoutant une légèrement marge pour un meilleur englobement et visualisation 
-    cv2.imwrite('output.jpg', image)
+    return(char_list)
     # Sauvegarde l'image traité et analysé dans le fichier "output.jpg"
-main()

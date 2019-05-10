@@ -60,7 +60,7 @@ def model_layer():
     # Création des différentes couches du réseaux neuronales de l'IA
     return model
 
-if __name__ == "__main__":
+def main():
     # Charge et normalise les différents set de données
     x_train, x_test, y_train, y_test = load_dataset()
     x_train, x_test, y_train, y_test = normalize_dataset(x_train, x_test, y_train, y_test)
