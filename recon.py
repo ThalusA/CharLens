@@ -2,7 +2,7 @@ import cv2 # Importe l'api OpenCV
 import numpy as np # Importe le module "numpy"
 
 def main():
-    confidence_ratio = 0.9 #Assigne une valeur de confiance au résultat du detecteur de chaines de caractères prenant donc que les prédictions qui ont plus de 90% de chance d'être juste
+    confidence_ratio = 0.8  #Assigne une valeur de confiance au résultat du detecteur de chaines de caractères prenant donc que les prédictions qui ont plus de 90% de chance d'être juste
     image = cv2.imread('input.png') #Charge l'image à analyser
     temp_image = np.zeros(image.shape, np.uint8) #Créer une image temporaire où stocker toutes les chaines de caractères detecter
     temp_image.fill(255) #Remplit cette image temporaire d'un fond blanc
